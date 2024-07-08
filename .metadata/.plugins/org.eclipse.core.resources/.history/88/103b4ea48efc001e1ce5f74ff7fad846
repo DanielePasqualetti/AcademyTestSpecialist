@@ -1,0 +1,11 @@
+package esercizi;
+
+public class Test_persona {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Persona p = new Persona();
+		Persona p1 = new Persona("Vincenzo", "Coniglio", 36);
+	}
+
+}

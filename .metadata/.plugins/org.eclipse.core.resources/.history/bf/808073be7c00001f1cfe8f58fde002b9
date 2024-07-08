@@ -1,0 +1,39 @@
+package giorno5;
+
+import java.util.Random;
+
+public class ArrayDiArray {
+
+	public static void main(String[] args) {
+
+		int[][] arrayDiArray = new int[5][5];
+		int sumDiagonalePrincipale = 0;
+		int sumDiagonaleSecondaria = 0;
+		int sumDiagonali = sumDiagonalePrincipale + sumDiagonalePrincipale;
+
+		Random random = new Random();
+
+		for (int i = 0; i < arrayDiArray.length; i++) {
+			for (int j = 0; j < arrayDiArray[i].length; j++) {
+				arrayDiArray[i][j] = random.nextInt(100);
+			}
+		}
+
+		System.out.println("Stampa dell'array: ");
+		for (int i = 0; i < arrayDiArray.length; i++) {
+			for (int j = 0; j < arrayDiArray[i].length; j++) {
+				System.out.print(arrayDiArray[i][j] + "\t");
+			}
+			System.out.println();
+		}
+
+		for (int i = 0; i < arrayDiArray.length; i++) {
+			sumDiagonalePrincipale += arrayDiArray[i][i];
+			sumDiagonaleSecondaria += arrayDiArray[i][arrayDiArray.length - 1 - i];
+		}
+		
+		System.out.println("Somma della diagonale principale: " + sumDiagonalePrincipale);
+		System.out.println("Somma della diagonale secondaria: " + sumDiagonaleSecondaria);
+	}
+
+}

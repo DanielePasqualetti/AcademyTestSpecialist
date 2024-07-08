@@ -1,0 +1,165 @@
+package giorno5;
+
+import java.util.Random;
+
+public class Tombola {
+
+	// Voglio un app che simuli il gioco della tombola dalla a alla z con alcune
+	// semplificazioni
+	// devo avere: un numero di giocatori e un numero di cartelle che ogni giocatore
+	// puo avere (ogni giocatore ha lo stesso numero di cartelle)
+	// si vince solo con la tombola
+	// voglio generare queste cartelle tramite il Random (generatore pseudo casuale
+	// 15 numeri da 1 a 90)
+	// ad ogni estrazione bisogna sapere ad ogni cartella quanti numeri mancano, non
+	// ci devono essere numeri ripetuti nell'estrazione
+	// bisogna tenere conto del numero delle estrazioni, di chi è la cartella, e
+	// quanti numeri mancavano alle altre cartelle
+	// BONUS leggibilità del codice e com,prensione dell'esecuzione
+
+	private static final int NUMERO_MIN = 1;
+	private static final int NUMERO_MAX = 90;
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int numeroGiocatori = 3; // Numero di giocatori
+		int numeroCartelle = 2; // Numero di cartelle per giocatore
+
+		// Inizializzazione del gioco
+		int[][][] cartelle = generaCartelle(numeroGiocatori, numeroCartelle);
+		boolean[][] numeriEstratti = new boolean[numeroGiocatori][NUMERO_MAX]; // Array per segnare i numeri estratti
+		int estrazioni = 0;
+
+		// Ciclo di estrazione fino alla vincita
+		while (true) {
+			estrazioni++;
+			int numeroEstratto;
+			do {
+				numeroEstratto = new Random().nextInt(NUMERO_MAX) + 1;
+			} while (numeriEstrattiGiocatore(numeriEstratti, numeroEstratto)); // Assicura che il numero estratto non
+																				// sia già stato estratto
+			segnaNumeroEstratto(numeriEstratti, numeroEstratto);
+
+			// Controllo vincita
+			if (controllaVincita(cartelle, numeriEstratti)) {
+				System.out.println("Tombola! Vincitore dopo " + estrazioni + " estrazioni.");
+				break;
+			}
+
+			// Stampa estrazione
+			System.out.println("Estratto il numero: " + numeroEstratto);
+
+			// Aggiornamento delle cartelle
+			aggiornaCartelle(cartelle, numeriEstratti, numeroEstratto);
+
+			// Stampa lo stato delle cartelle
+			for (int i = 0; i < numeroGiocatori; i++) {
+				for (int j = 0; j < numeroCartelle; j++) {
+					System.out.print("Giocatore " + (i + 1) + ", Cartella " + (j + 1) + ": ");
+					for (int k = 0; k < cartelle[i][j].length; k++) {
+						System.out.print(cartelle[i][j][k] + " ");
+					}
+					System.out.println();
+				}
+			}
+		}
+	}
+
+	// Genera le cartelle per ogni giocatore
+	private static int[][][] generaCartelle(int numeroGiocatori, int numeroCartelle) {
+		int[][][] cartelle = new int[numeroGiocatori][numeroCartelle][15];
+		Random random = new Random();
+
+		for (int i = 0; i < numeroGiocatori; i++) {
+			for (int j = 0; j < numeroCartelle; j++) {
+				for (int k = 0; k < 15; k++) {
+					int numeroCasuale;
+					do {
+						numeroCasuale = random.nextInt(NUMERO_MAX) + 1;
+					} while (contieneNumero(cartelle[i][j], numeroCasuale)); // Assicura che non ci siano numeri
+																				// ripetuti
+					cartelle[i][j][k] = numeroCasuale;
+				}
+				ordinaCartella(cartelle[i][j]); // Ordina i numeri nella cartella
+			}
+		}
+
+		return cartelle;
+	}
+
+	// Controlla se un array contiene un certo numero
+	private static boolean contieneNumero(int[] array, int numero) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == numero) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Ordina i numeri in una cartella
+	private static void ordinaCartella(int[] cartella) {
+		for (int i = 0; i < cartella.length - 1; i++) {
+			for (int j = i + 1; j < cartella.length; j++) {
+				if (cartella[i] > cartella[j]) {
+					int temp = cartella[i];
+					cartella[i] = cartella[j];
+					cartella[j] = temp;
+				}
+			}
+		}
+	}
+
+	// Segna un numero estratto
+	private static void segnaNumeroEstratto(boolean[][] numeriEstratti, int numero) {
+		for (int i = 0; i < numeriEstratti.length; i++) {
+			numeriEstratti[i][numero - 1] = true;
+		}
+	}
+
+	// Controlla se un numero è stato già estratto per un giocatore
+	private static boolean numeriEstrattiGiocatore(boolean[][] numeriEstratti, int numero) {
+	    if (numero >= NUMERO_MIN && numero <= NUMERO_MAX) {
+	        for (int i = 0; i < numeriEstratti.length; i++) {
+	            if (numeriEstratti[i][numero - 1]) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+
+
+	// Controlla se c'è una vincita
+	private static boolean controllaVincita(int[][][] cartelle, boolean[][] numeriEstratti) {
+		for (int i = 0; i < cartelle.length; i++) {
+			for (int j = 0; j < cartelle[i].length; j++) {
+				boolean vincita = true;
+				for (int k = 0; k < cartelle[i][j].length; k++) {
+					if (!numeriEstratti[i][cartelle[i][j][k] - 1]) {
+						vincita = false;
+						break;
+					}
+				}
+				if (vincita) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// Aggiorna lo stato delle cartelle dopo ogni estrazione
+	private static void aggiornaCartelle(int[][][] cartelle, boolean[][] numeriEstratti, int numeroEstratto) {
+		for (int i = 0; i < cartelle.length; i++) {
+			for (int j = 0; j < cartelle[i].length; j++) {
+				for (int k = 0; k < cartelle[i][j].length; k++) {
+					if (cartelle[i][j][k] == numeroEstratto) {
+						cartelle[i][j][k] = -1; // Segna il numero come estratto nella cartella
+					}
+				}
+				ordinaCartella(cartelle[i][j]); // Riordina la cartella dopo la rimozione del numero estratto
+			}
+		}
+	}
+}

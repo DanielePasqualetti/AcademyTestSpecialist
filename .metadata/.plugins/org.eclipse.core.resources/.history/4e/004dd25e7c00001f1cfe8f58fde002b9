@@ -1,0 +1,28 @@
+package giorno5;
+
+import java.util.Random;
+
+public class ArrayDiArray {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[][] arrayDiArray = new int[2][2];
+
+		Random random = new Random();
+
+		for (int i = 0; i < arrayDiArray.length; i++) {
+			for (int j = 0; j < arrayDiArray[i].length; j++) {
+				arrayDiArray[i][j] = random.nextInt(100);
+			}
+		}
+		
+		System.out.println("Stampa dell'array: ");
+		for (int i = 0; i < arrayDiArray.length; i++) {
+			for (int j = 0; j < arrayDiArray[i].length; j++) {
+				System.out.println(arrayDiArray[i][j] + "\t");
+			}
+			System.out.println();
+		}
+	}
+
+}

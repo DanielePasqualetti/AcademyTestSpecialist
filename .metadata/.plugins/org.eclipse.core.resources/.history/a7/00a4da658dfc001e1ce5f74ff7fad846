@@ -1,0 +1,27 @@
+package esercizi;
+
+public class Persona {
+
+	private String nome;
+	private String cognome;
+	private int eta;
+	
+	//Costruttori
+	//Costruttore di Default (vuoto)
+	public Persona() {
+		this.nome = "";
+		this.cognome = "";
+		this.eta = 0;
+	}
+	//Costruttore 
+	// lo scrivo in questo modo perché finché non utilizziamo
+	// Hibernate ci gestiamo il NullPointException poiché non
+	// rimane null l'oggetto ma viene istanziato con valori vuoti o zero
+	
+	public Persona(String nome, String cognome, int eta) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.eta = eta;
+	}
+}
